@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Toolbar } from "./Toolbar";
+import { ColorPickerContext } from "../providers/ColorPickerProvider";
 
 type GridFieldProps = {
     type: "day";
@@ -19,8 +20,8 @@ type GridFieldProps = {
 }
 
 export function GridField(props: GridFieldProps) {
+    const {date, setDate} = useContext(ColorPickerContext)!;
     const base = "flex border border-sky-600 w-full justify-center text-sky-600";
-    const [isSelected, setIsSelected] = useState(false);
     const [selectedColor, setSelectedColor] = useState<null | string>(null);
 
     const getIsWeekend = (monthIndex: number, dayNumber: number, year: number) => {
@@ -40,36 +41,20 @@ export function GridField(props: GridFieldProps) {
             <div className="flex flex-col w-full h-full">
                 <textarea 
                 name="myInput" 
-                className="flex-1 w-full border border-transparent outline-none resize-none focus:border-rose-600 focus:border-2" 
+                className="flex-1 w-full border border-transparent outline-none resize-none focus:border-rose-600 focus:border-2 text-black" 
                 style={selectedColor ? { backgroundColor: selectedColor } : undefined}
-                onFocus={() => setIsSelected(true)}
-                onBlur={() => setIsSelected(false)}
+                onClick={() => setDate({ day: props.dayNumber, month: props.monthIndex })}
                 />
             </div>
         )}
         {props.type === "label" && props.label}
-        {isSelected && props.type === "day" && props.valid && (
+        {props.type === "day" && date?.day === props.dayNumber && date?.month === props.monthIndex && props.valid && (
             <div className="absolute left-1/2 -translate-x-1/2 top-0 -translate-y-full">
                 <Toolbar
-                    selectedColor={selectedColor ? colorKeyFromValue(selectedColor) : null}
-                    onSelectColor={(color) => setSelectedColor(colorValueFromKey(color))}
+                    selectedColor={selectedColor}
+                    onSelectColor={(color) => setSelectedColor(color)}
                 />
             </div>
-
         )}
     </div>;
-}
-
-function colorValueFromKey(color: "red" | "green" | "blue") {
-    return {
-        red: "#ef4444",
-        green: "#22c55e",
-        blue: "#3b82f6",
-    }[color];
-}
-
-function colorKeyFromValue(value: string) {
-    if (value === "#ef4444") return "red";
-    if (value === "#22c55e") return "green";
-    return "blue";
 }

@@ -1,3 +1,4 @@
+import { ColorPickerProvider } from "../providers/ColorPickerProvider";
 import { GridField } from "./GridField";
 
 type CalendarGridProps = {
@@ -16,38 +17,40 @@ export default function CalendarGrid(props: CalendarGridProps) {
   };
 
   return (
-      <div className="
-        flex-1
-        w-full h-full rounded
-        grid
-        grid-rows-13
-        grid-cols-32
-      ">
+      <ColorPickerProvider>
+        <div className="
+          flex-1
+          w-full h-full rounded
+          grid
+          grid-rows-13
+          grid-cols-32
+          ">
 
-        <GridField type="empty" />
-        {days.map(day => (
-          <GridField key={`day-${day}`} type="label" label={String(day)} />
-        ))}
+          <GridField type="empty" />
+          {days.map(day => (
+            <GridField key={`day-${day}`} type="label" label={String(day)} />
+          ))}
 
-        {months.map((month, i) => {
-          const daysInMonth = getDaysInMonth(i, props.year);
-          return (
-            <div key={`row-${i}`} className="contents"> 
-                
-              <GridField type="label" label={month} />
+          {months.map((month, i) => {
+            const daysInMonth = getDaysInMonth(i, props.year);
+            return (
+              <div key={`row-${i}`} className="contents"> 
+                  
+                <GridField type="label" label={month} />
 
-              {Array.from({ length: 31 }).map((_, j) => (
-                <GridField key={`cell-${i}-${j}`} 
-                    type="day" 
-                    valid={j + 1 <= daysInMonth} 
-                    dayNumber={j + 1} 
-                    monthIndex={i} 
-                    year={props.year}/>
-              ))}
+                {Array.from({ length: 31 }).map((_, j) => (
+                  <GridField key={`cell-${i}-${j}`} 
+                  type="day" 
+                  valid={j + 1 <= daysInMonth} 
+                  dayNumber={j + 1} 
+                  monthIndex={i} 
+                  year={props.year}/>
+                ))}
 
-            </div>
-          );
-        })}
-      </div>
+              </div>
+            );
+          })}
+        </div>
+      </ColorPickerProvider>
   );
 }
