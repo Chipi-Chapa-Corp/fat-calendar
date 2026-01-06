@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { CgColorPicker } from "react-icons/cg";
 import { ColorPickerContext } from "../providers/ColorPickerProvider";
 
 type ToolbarProps = {
@@ -30,10 +31,10 @@ export function Toolbar(props: ToolbarProps) {
 			{ColorSwatch({ ...props, color: "#22C55E" })}
 			{ColorSwatch({ ...props, color: "#3B82F6" })}
 			<div className="relative flex items-center justify-center">
-				<p className="absolute text-black pointer-events-none">+</p>
+				<CgColorPicker className="absolute text-black pointer-events-none" />
 				<input
 					type="color"
-					className="cursor-pointer h-4 w-4 rounded border border-gray-300 [&::-moz-color-swatch]:border-none [&::-webkit-color-swatch]:border-none"
+					className="cursor-pointer h-4 w-4 rounded bg-white [&::-moz-color-swatch]:border-none [&::-webkit-color-swatch]:border-none"
 					value={color}
 					onChange={(event) => {
 						setColor(event.target.value);
