@@ -36,9 +36,22 @@ export function GridField(props: GridFieldProps) {
 		return dayOfWeek === 0 || dayOfWeek === 6;
 	};
 
+	const getIsPastDay = (
+		monthIndex: number,
+		dayNumber: number,
+		year: number,
+	) => {
+		const dayDate = new Date(year, monthIndex, dayNumber);
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+		return dayDate < today;
+	};
+
 	const dayStyles = () => {
 		if (props.type !== "day") return "items-center bg-zinc-50";
 		if (!props.valid) return "h-full bg-sky-600/30";
+		if (getIsPastDay(props.monthIndex, props.dayNumber, props.year))
+			return "h-full bg-gray-400/50 pointer-events-none";
 		return `h-full ${getIsWeekend(props.monthIndex, props.dayNumber, props.year) ? "bg-rose-600/10" : "bg-zinc-50"}`;
 	};
 
@@ -48,10 +61,15 @@ export function GridField(props: GridFieldProps) {
 				<div className="flex flex-col w-full h-full">
 					<textarea
 						name="myInput"
-						className="flex-1 w-full border border-transparent outline-none resize-none focus:border-rose-600 focus:border-2 text-black"
+						className="flex-1 w-full border border-transparent outline-none resize-none focus:border-rose-600 focus:border-2 text-black disabled:cursor-not-allowed"
 						style={
 							selectedColor ? { backgroundColor: selectedColor } : undefined
 						}
+						disabled={getIsPastDay(
+							props.monthIndex,
+							props.dayNumber,
+							props.year,
+						)}
 						onClick={() =>
 							setDate({ day: props.dayNumber, month: props.monthIndex })
 						}
